@@ -1,45 +1,91 @@
 ---
-title: ChrisOS Preview
-version: 0.1
-status: public-preview
+title: axiomCE-sample
+type: index
 classification: public
+created: 2026-07-15
+updated: 2026-07-15
+status: sample
 ---
 
-# ChrisOS
+# axiomCE-sample
 
-**A portable operating environment for long-term human–AI collaboration.**
+**A public, data-free sample reference implementation of [AxiomCE](https://github.com/chris-penchoen/axiomCE) — the Axiom Continuity Engine.**
 
-ChrisOS began as a practical problem: preserve years of useful context and working habits when moving between AI systems.
+This repository demonstrates the AxiomCE knowledge loop end to end using a
+small, **fictional** organization ("Acme"). It contains no private data. Its
+purpose is to show *how the engine behaves once populated* — not to be a useful
+personal instance.
 
-It became a broader architecture for separating:
+## Where this sits: the three layers
 
-- what is known about a person and their world;
-- how an AI should collaborate with that person;
-- what belongs to the human versus the model;
-- what is implemented versus still hypothetical;
-- and what must remain portable across vendors and model families.
+- **[axiom](https://github.com/chris-penchoen/axiom)** — the invariant theory
+  (the Canon). Included here as the `axiom/` submodule.
+- **[axiomCE](https://github.com/chris-penchoen/axiomCE)** — the Continuity
+  Engine that operationalizes Axiom: schema, tools, governance templates.
+  Included here as the `axiomCE/` submodule.
+- **axiomCE-sample** (this repo) — a reference implementation that *consumes*
+  both as dependencies and adds fictional data.
 
-> **ChrisOS treats long-term human–AI collaboration as production infrastructure rather than application state.**
+## Getting the dependencies
 
-The design objective is simple:
+This repo uses git submodules. Clone with:
 
-> **There is one human. Models adapt. Not the human.**
+```sh
+git clone --recurse-submodules https://github.com/chris-penchoen/axiomCE-sample.git
+# or, after a plain clone:
+git submodule update --init --recursive
+```
 
-That objective is not yet proven. The current prototype includes a working knowledge layer, a cognitive-model policy layer, calibration cases, validators, and an early cross-model comparison. Long-term portability remains an active hypothesis.
+## What's here
 
-## Start here
+```
+axiom/                     # submodule — the Canon (theory)
+axiomCE/                   # submodule — the engine (schema, tools, governance)
+acme/overview.md           # canonical narrative for the demo organization
+sources/                   # immutable provenance records (a conversation + an inventory)
+claims/                    # append-only atomic facts (JSONL)
+entities/                  # stable identity anchors
+reconcile/manifest.jsonl   # declares which canonical fields are claim-backed
+cognitive-model/           # collaboration plane: policy + one calibration case
+views/                     # generated (git-ignored; run the tool to build them)
+```
 
-- [What ChrisOS is](WHAT_IS_CHRISOS.md)
-- [Why it exists](WHY_IT_EXISTS.md)
-- [Architecture](ARCHITECTURE.md)
-- [System diagrams](SYSTEM_DIAGRAMS.md)
-- [Ownership model](OWNERSHIP_MODEL.md)
-- [Current status](CURRENT_STATUS.md)
-- [Example calibration case](EXAMPLE_CALIBRATION.md)
-- [Roadmap and research questions](ROADMAP.md)
+The engine's tools live in the `axiomCE/` submodule and operate on this repo's
+data (they scan the current working directory).
 
-## Public-preview scope
+## Run the loop
 
-This package is deliberately sanitized. It contains no personal claim records, private source material, family information, financial data, employer-confidential context, raw chat exports, or private calibration examples.
+From the repository root:
 
-The private operational repository and this public preview are not the same artifact.
+```sh
+# 1. Build the generated views from the claim log:
+node axiomCE/tools/generate-views.mjs
+
+# 2. Validate everything:
+node axiomCE/tools/validate.mjs            # Markdown front matter + links
+node axiomCE/tools/validate-claims.mjs     # claim schema + entity/supersedes refs
+node axiomCE/tools/privacy-check.mjs       # leak scan
+node axiomCE/tools/validate-cognitive.mjs  # policy rule IDs + calibration refs
+node axiomCE/tools/reconcile.mjs           # canonical prose vs. active claims
+
+# Run the engine's own test suite:
+node --test axiomCE/tools/*.test.mjs
+```
+
+## What the sample demonstrates
+
+- **Provenance:** every claim links back to a source record.
+- **Contradiction without adjudication:** a `$400` standard price and a `$350`
+  early-bird coexist as distinct predicates.
+- **Supersession + confidence upgrade:** a `user-stated` price is superseded by a
+  `confirmed` one after a firsthand observation.
+- **Retraction as history:** a "Webflow selected" claim is retracted (the pilot
+  was never a decision) and preserved in the view's history section.
+- **Reconciliation:** `reconcile/manifest.jsonl` ties canonical prose to the
+  active claims so drift is reported, never silently rewritten.
+- **The collaboration plane:** a delivery-contract policy with stable `CM-*` IDs
+  and a calibration case that cites them.
+
+## License
+
+See [LICENSE.md](LICENSE.md).

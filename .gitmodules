@@ -1,0 +1,6 @@
+[submodule "axiom"]
+	path = axiom
+	url = https://github.com/chris-penchoen/axiom.git
+[submodule "axiomCE"]
+	path = axiomCE
+	url = https://github.com/chris-penchoen/axiomCE.git

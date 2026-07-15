@@ -19,10 +19,11 @@ personal instance.
 ## Where this sits: the three layers
 
 - **[axiom](https://github.com/chris-penchoen/axiom)** — the invariant theory
-  (the Canon). Included here as the `axiom/` submodule.
+  (the Canon). Pulled in transitively via axiomCE at `axiomCE/axiom/` — never
+  copied, so the defining principles cannot drift.
 - **[axiomCE](https://github.com/chris-penchoen/axiomCE)** — the Continuity
-  Engine that operationalizes Axiom: schema, tools, governance templates.
-  Included here as the `axiomCE/` submodule.
+  Engine that operationalizes Axiom: schema, tools, governance templates, and
+  the canon dependency. Included here as the `axiomCE/` submodule.
 - **axiomCE-sample** (this repo) — a reference implementation that *consumes*
   both as dependencies and adds fictional data.
 
@@ -39,8 +40,8 @@ git submodule update --init --recursive
 ## What's here
 
 ```
-axiom/                     # submodule — the Canon (theory)
 axiomCE/                   # submodule — the engine (schema, tools, governance)
+axiomCE/axiom/             # nested submodule — the Canon (theory), via axiomCE
 acme/overview.md           # canonical narrative for the demo organization
 sources/                   # immutable provenance records (a conversation + an inventory)
 claims/                    # append-only atomic facts (JSONL)
